@@ -1,5 +1,5 @@
-from adventurelib import when, say
-import adventurelib
+from basiclib import when, say
+import basiclib
 
 class Player:
     def __init__(self):
@@ -16,18 +16,16 @@ class Enemy:
         self.health_points = 10
 
 
-class Room(adventurelib.Room):
+class Room(basiclib.Room):
     """Reimplement"""
 
 
-class Bag(adventurelib.Bag):
+class Bag(basiclib.Bag):
     """Reimplement"""
 
 
-class Item(adventurelib.Item):
+class Item(basiclib.Item):
     """Reimplement"""
-
-
 
 
 @when('north', direction='north')
@@ -89,4 +87,4 @@ def start(description_object):
     global rpg_game
     rpg_game = description_object.get_description()
     look()
-    adventurelib.start()
+    basiclib.start(rpg_game)
