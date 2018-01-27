@@ -216,7 +216,7 @@ class Bag(set):
 
 def _register(command, func, context='default', kwargs={}):
     """Register func as a handler for the given command."""
-    pattern = Pattern(command, context)
+    pattern = Command(command, context)
     sig = inspect.signature(func)
     func_argnames = set(sig.parameters)
     when_argnames = set(pattern.argnames) | set(kwargs.keys())
@@ -232,10 +232,10 @@ def _register(command, func, context='default', kwargs={}):
     commands.append((pattern, func, kwargs))
 
 
-class Pattern:
+class Command:
     """A pattern for matching a command.
 
-    Patterns are defined with a string like 'take ITEM' which corresponds to
+    Commands are defined with a string like 'take ITEM' which corresponds to
     matching 'take' exactly followed by capturing one or more words as the
     group named 'item'.
     """
@@ -307,7 +307,7 @@ class Pattern:
         while take > 0:
             remain = have - take
             if have >= placeholders - 1:
-                combos = Pattern.word_combinations(remain, other_groups)
+                combos = Command.word_combinations(remain, other_groups)
                 for buckets in combos:
                     yield (take,) + tuple(buckets)
             take -= 1  # backtrack
@@ -429,10 +429,10 @@ def start(game_description, help=True):
     if help:
         # Ugly, but we want to keep the arguments consistent
         help = globals()['help']
-        qmark = Pattern('help')
+        qmark = Command('help')
         qmark.prefix = ['?']
         qmark.orig_pattern = '?'
-        commands.insert(0, (Pattern('help'), help, {}))
+        commands.insert(0, (Command('help'), help, {}))
         commands.insert(0, (qmark, help, {}))
     while True:
         try:
@@ -466,5 +466,5 @@ def say(msg):
 
 
 commands = [
-    (Pattern('quit'), sys.exit, {}),  # quit command is built-in
+    (Command('quit'), sys.exit, {}),  # quit command is built-in
 ]
