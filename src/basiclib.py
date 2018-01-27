@@ -83,6 +83,7 @@ class Room:
 
     def __init__(self, description):
         self.description = description.strip()
+        self.enemies = []
 
         # Copy class Bags to instance variables
         for k, v in vars(type(self)).items():
@@ -467,7 +468,7 @@ def _handle_command(cmd):
     print()
 
 
-def start(game_description, help=True):
+def start(game_description, world_update, help=True):
     """Run the game."""
     if help:
         # Ugly, but we want to keep the arguments consistent
@@ -488,6 +489,7 @@ def start(game_description, help=True):
             continue
 
         _handle_command(cmd)
+        world_update()
 
 
 def say(msg):

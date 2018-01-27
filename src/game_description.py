@@ -1,5 +1,8 @@
 import rpglib
 
+def set_random_enemy(room):
+    room.set_enemies([rpglib.get_random_enemy()])
+
 def get_description():
     rpglib.Room.items = rpglib.Bag()
 
@@ -10,10 +13,12 @@ def get_description():
     valley = starting_room.north = rpglib.Room("""
     You are in a beautiful valley.
     """)
+    valley.set_player_enter_callback(set_random_enemy)
 
     magic_forest = valley.north = rpglib.Room("""
     You are in a enchanted forest where magic grows wildly.
     """)
+    magic_forest.set_player_enter_callback(set_random_enemy)
 
     mallet = rpglib.Item('rusty mallet', 'mallet')
     valley.items = rpglib.Bag({mallet,})
