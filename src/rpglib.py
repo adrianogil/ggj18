@@ -31,11 +31,11 @@ class Player:
         say("HP " + self.get_health_str())
         say("MP " + self.get_mana_str())
 
-    def receive_damage(self, damage):
+    def receive_damage(self, damage, source):
         say("Wizard Owl received " + str(damage) + " points of damage")
         self.current_HP = self.current_HP - damage
         if self.current_HP <= 0:
-            say("Wizard Owl is dead. ")
+            say("Wizard Owl was slaughtered by " + source.name)
             say("Game Over")
 
 class GameDescription:
@@ -98,9 +98,16 @@ class Enemy:
             # print('UpdateAction - Attack')
             if self.is_attack_successful():
                 damage = self.get_attack_damage()
-                self.attack_target.receive_damage(damage)
+                self.attack_target.receive_damage(damage, self)
             else:
                 say(self.attack_target_name + " dodges attack")
+
+    def receive_damage(self, damage, source):
+        say(self.name + " received " + str(damage) + " points of damage")
+        self.current_HP = self.current_HP - damage
+        if self.current_HP <= 0:
+            say(e.name + " is dead.")
+            self.state = EnemyState.Dead
 
 
 
@@ -214,9 +221,12 @@ def cast(magic):
     global rpg_game
     if magic == None:
         say("Which magic you would like to spell?")
+        return
     for m in rpg_game.player.learned_spells:
         magic_name_size = len(m.name)
-        if magic[:magic_name_size].lower() == m.name.lower():
+        if len(magic) >= magic_name_size and \
+          magic[:magic_name_size].lower() == m.name.lower():
+            # print(magic)
             m.cast(rpg_game, magic[magic_name_size:])
             break
 
