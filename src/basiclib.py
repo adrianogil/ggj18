@@ -408,10 +408,19 @@ def help():
     for c in cmds:
         print(c)
 
+def create_alias(alias, cmd):
+    for pattern, func, kwargs in commands:
+        args = kwargs.copy()
+        matches = pattern.match(cmd)
+        if matches is not None:
+            args.update(matches)
+            aliases.append({'alias' : alias, 'func':func, 'args':args})
+            # func(**args)
+            break
+    else:
+        no_command_matches(str(cmd))
 
-def _handle_command(cmd):
-    """Handle a command typed by the user."""
-    ws = cmd.lower().split()
+def _handle_pattern(ws, cmd):
     for pattern, func, kwargs in commands:
         args = kwargs.copy()
         matches = pattern.match(ws)
@@ -420,7 +429,41 @@ def _handle_command(cmd):
             func(**args)
             break
     else:
-        no_command_matches(cmd)
+        for a in aliases:
+            alias  = a['alias'] 
+            func   = a['func']
+            kwargs = a['args']
+            args = kwargs.copy()
+            if ws[0] == alias:
+                func(**args)
+                break
+        else: 
+            no_command_matches(cmd)
+
+def _handle_command(cmd):
+    """Handle a command typed by the user."""
+    ws = cmd.lower().split()
+    wset = []
+    wcmd = ''
+    i = 0
+    concat_mode = True
+
+    for w in ws:
+        if i == 0 and w == 'alias':
+            create_alias(ws[1], ws[2:])
+            concat_mode = False
+            break
+        if w == "&&":
+            if len(wset) > 0:
+                _handle_pattern(wset, wcmd)
+            wset = []
+            wcmd = ''
+        else:
+            wset.append(w)
+            wcmd = wcmd + w
+    if concat_mode and len(wset) > 0:
+        _handle_pattern(wset, wcmd)
+    # Jump line
     print()
 
 
@@ -467,4 +510,6 @@ def say(msg):
 
 commands = [
     (Command('quit'), sys.exit, {}),  # quit command is built-in
+]
+aliases = [
 ]

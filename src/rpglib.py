@@ -83,6 +83,10 @@ def cast(magic):
     if magic == None:
         say("Which magic you would like to spell?")
 
+@when('alias NAME CMD')
+def alias(name, cmd):
+    say("Creating alias " + name + " equal to " + cmd)
+
 def start(description_object):
     global rpg_game
     rpg_game = description_object.get_description()
