@@ -3,7 +3,7 @@ import rpglib
 def get_description():
     rpglib.Room.items = rpglib.Bag()
 
-    current_room = starting_room = rpglib.Room("""
+    starting_room = rpglib.Room("""
     You are in a dark room.
     """)
 
@@ -19,7 +19,7 @@ def get_description():
     valley.items = rpglib.Bag({mallet,})
 
     game_description = rpglib.GameDescription()
-    game_description.starting_room = starting_room
+    game_description.current_room = starting_room
     game_description.player.inventory = rpglib.Bag() # Empty inventory
 
     return game_description
