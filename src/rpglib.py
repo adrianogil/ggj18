@@ -2,8 +2,10 @@ from basiclib import when, say
 import basiclib
 
 import spell
+import creatures
 
 import random
+import sys
 
 class Player:
     def __init__(self):
@@ -13,18 +15,22 @@ class Player:
         self.max_HP = 10
         self.current_HP = self.max_HP
 
-        self.max_mana = 15
-        self.current_mana = self.max_mana
+        self.max_MP = 15
+        self.current_MP = self.max_MP
 
         self.learned_spells = [
             spell.spell_list["Magic missiles"]
+        ]
+
+        self.learned_invokable_creatures = [
+            creatures.creatures_list["Little demon"]
         ]
 
     def get_health_str(self):
         return str(self.current_HP) + "/" + str(self.max_HP)
 
     def get_mana_str(self):
-        return str(self.current_mana) + "/" + str(self.max_mana)
+        return str(self.current_MP) + "/" + str(self.max_MP)
 
     def status(self):
         say("Wizard Owl Lv " + str(self.level))
@@ -37,6 +43,13 @@ class Player:
         if self.current_HP <= 0:
             say("Wizard Owl was slaughtered by " + source.name)
             say("Game Over")
+            sys.exit()
+
+    def use_MP(self, MP_usage):
+        if self.current_MP >= MP_usage:
+            self.current_MP = self.current_MP - MP_usage
+            return True
+        return False
 
 class GameDescription:
     def __init__(self):
@@ -70,7 +83,7 @@ class Enemy:
         if self.STR < 6:
             return 1
 
-        return (self.STR) / 2
+        return (self.STR - 6) / 3
 
     def is_attack_successful(self):
         prob = random.uniform(0, 1)
@@ -78,7 +91,7 @@ class Enemy:
         return prob > 0.3
 
     def get_attack_damage(self):
-        return int(random.uniform(0.6, 1.2) * self.get_STR_MOD())
+        return int(0.5 * Dice.parse('1d4') * self.get_STR_MOD())
 
     def update_action(self, game_description):
         if self.state == EnemyState.Idle:
@@ -106,17 +119,17 @@ class Enemy:
         say(self.name + " received " + str(damage) + " points of damage")
         self.current_HP = self.current_HP - damage
         if self.current_HP <= 0:
-            say(e.name + " is dead.")
+            say(self.name + " is dead.")
             self.state = EnemyState.Dead
 
 
-
-def get_random_enemy():
-    enemies = [
+enemies = [
         Enemy("Kobold", 3, 8),
         Enemy("Kobold Sr", 10, 20),
         Enemy("Skull", 5, 25)
     ]
+
+def get_random_enemy():
 
     return random.choice(enemies)
 
@@ -230,6 +243,25 @@ def cast(magic):
             m.cast(rpg_game, magic[magic_name_size:])
             break
 
+@when('invoke list')
+def list_invokable_creatures():
+    global rpg_game
+    for c in rpg_game.player.learned_invokable_creatures:
+        say(c.name)
+
+@when('invoke CREATURE')
+def invoke(creature):
+    global rpg_game
+    if creature == None:
+        say("Which creature you would like to invoke?")
+        return
+    for c in rpg_game.player.learned_invokable_creatures:
+        creature_name_size = len(c.name)
+        if len(creature) >= creature_name_size and \
+          creature[:creature_name_size].lower() == c.name.lower():
+            # print(magic)
+            c.invoke(rpg_game, creature[creature_name_size:])
+            break
 
 @when('alias NAME CMD')
 def alias(name, cmd):

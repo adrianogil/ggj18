@@ -22,22 +22,28 @@ class Spell:
 
         return self
 
-    def cast(self, game_description, params):        
+    def set_MP_cost(self, MP_cost):
+        self.MP_cost = MP_cost
+
+        return self
+
+    def cast(self, game_description, params):
         # print(params)
         params = params.strip()
         wparams = params.strip().split()
-        if self.spell_type == SpellType.Attack:
-            for e in game_description.current_room.enemies:
-                enemy_name_size = len(e.name)
-                if len(params) >= enemy_name_size and \
-                   params[:enemy_name_size].lower() == e.name.lower():
-                   self.description.add_tag("target", [e.name])
-                   say(self.description)
-                   damage = Dice.parse(self.damage_dice)
-                   e.receive_damage(damage, self)
-                   break
-            else:
-                say('No target identified')
+        if game_description.player.use_MP(self.MP_cost):
+            if self.spell_type == SpellType.Attack:
+                for e in game_description.current_room.enemies:
+                    enemy_name_size = len(e.name)
+                    if len(params) >= enemy_name_size and \
+                       params[:enemy_name_size].lower() == e.name.lower():
+                       self.description.add_tag("target", [e.name])
+                       say(self.description)
+                       damage = Dice.parse(self.damage_dice)
+                       e.receive_damage(damage, self)
+                       break
+                else:
+                    say('No target identified')
 
     def get_description(self):
         self.description.add_tag("target", "its target")
@@ -50,4 +56,5 @@ spell_list = {
                         SimpleGrammar().set_text("A missile of magical energy darts forth from your fingertip and strikes #target#"),
                          SpellType.Attack)
                     .set_damage('1d4')
+                    .set_MP_cost(2)
 }
