@@ -51,6 +51,10 @@ class Creature:
     def is_dead(self):
         return self.current_HP <= 0
 
+    def show_status(self):
+        say(self.name + ' HP ' + str(self.current_HP) + '/' + str(self.max_HP))
+        say('Time to invoke to finish: ' + str(self.cast_time) + ' turns')
+
     def invoke(self, game_description, params):
         params = params.strip()
         wparams = params.strip().split()
@@ -80,7 +84,7 @@ class Creature:
     def update_action(self, game_description):
         if self.state == CreatureState.Idle:
             # Verify enemies in current room
-            for e in game_description.current_room.enemies:
+            for e in self.current_room.enemies:
                 if not e.is_dead():
                     self.attack_target = e
                     self.attack_target_name = e.name
@@ -108,6 +112,7 @@ class Creature:
         self.cast_time = self.cast_time - 1
         if self.cast_time <= 0:
             say(self.name + "'s invocation finished.")
+            game_description.player.creatures.remove(self)
 
     def receive_damage(self, damage, source):
         say(self.name + " received " + str(damage) + " points of damage")
@@ -121,6 +126,7 @@ class Creature:
             # Creature should attack whatever attack him
             self.state = CreatureState.Attack
             self.attack_target = source
+            self.attack_target_name = source.name
 
 creatures_list = {
     "Little demon" : Creature("Little demon", 4)

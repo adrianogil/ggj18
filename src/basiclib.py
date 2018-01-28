@@ -85,6 +85,10 @@ class Room:
         self.description = description.strip()
         self.enemies = []
 
+        self.enter_callback = None
+        self.exit_callback = None
+        self.stay_callback = None
+
         # Copy class Bags to instance variables
         for k, v in vars(type(self)).items():
             if isinstance(v, Bag):
