@@ -36,7 +36,12 @@ class Dice:
         waiting_for_dice = False
 
         for s in str_dice_data:
-            if waiting_for_dice:
+            if waiting_for_dice and s == '+':
+                current_value = current_value + Dice.dn(int(dice_str), current_num_dice)
+                dice_str = ''
+                num_str = ''
+                waiting_for_dice = False
+            elif waiting_for_dice:
                 dice_str = dice_str + s
             elif is_num(s):
                 num_str = num_str + s
