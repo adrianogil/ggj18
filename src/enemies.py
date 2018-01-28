@@ -6,6 +6,8 @@ from grammar import SimpleGrammar
 
 import random
 
+import utils
+
 class EnemyState:
     Idle = 0
     PrepareToAttack = 1
@@ -36,8 +38,17 @@ class Enemy:
         return self
 
     def setHP(self, HP):
+        if utils.is_int(HP):
+            HP = int(HP)
+        else:
+            HP = Dice.parse(HP)
         self.max_HP = HP
         self.current_HP = self.max_HP
+
+        return self
+
+    def set_description(self, description):
+        self.description = description
 
         return self
 
@@ -106,17 +117,3 @@ class Enemy:
             self.state = EnemyState.Attack
             self.attack_target = source
             self.attack_target_name = source.name
-
-
-enemies = [
-        Enemy("Kobold")
-            .setHP(5)
-            .add_attack(SimpleGrammar()
-                .set_text("#attack#")
-                .add_tag("attack", [
-                    "#name# is attacking #target# with its claws"
-                    ]),
-                '1d4')
-        # Enemy("Kobold Sr", 10, 20),
-        # Enemy("Skull", 5, 25)
-    ]

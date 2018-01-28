@@ -68,10 +68,22 @@ class GameDescription:
         self.starting_room = None
 
 def get_random_enemy():
-    return random.choice(enemies.enemies)
+    global rpg_game
+
+    return random.choice(rpg_game.defined_enemies)
+
+
+class Enemy(enemies.Enemy):
+    """Reimplement"""
+
 
 class Room(basiclib.Room):
     """Reimplement"""
+
+    def set_name(self, name):
+        self.name = name
+
+        return self
 
     def set_player_enter_callback(self, callback):
         self.enter_callback = callback;

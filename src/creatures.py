@@ -2,6 +2,8 @@ from basiclib import say
 
 from dice import Dice
 
+import utils
+
 class CreatureState:
     NonExistant = 0
     Idle = 1
@@ -71,9 +73,12 @@ class Creature:
             last_room = self.current_room
             self.current_room = room
             say(self.name + ' went %s.' % direction)
+
+            return True
             # look()
             # if room != last_room:
             #     room.on_player_enter()
+        return False
 
     def is_attack_successful(self):
         return Dice.parse('1d20') > 8
@@ -94,7 +99,8 @@ class Creature:
             else:
                 # No enemies. Should move? Random move!
                 dir = Dice.parse( '1d4')
-                self.go(self.directions[dir-1])
+                if not self.go(self.directions[dir-1]):
+                    say(utils.capitalize(self.name) + ' is wandering loosely')
         elif self.state == CreatureState.Attack:
             if self.attack_target.is_dead():
                 self.state = CreatureState.Idle
