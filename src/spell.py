@@ -27,7 +27,7 @@ class Spell:
 
         return self
 
-    def cast(self, game_description, params):
+    def cast(self, caster, game_description, params):
         # print(params)
         params = params.strip()
         wparams = params.strip().split()
@@ -40,7 +40,7 @@ class Spell:
                        self.description.add_tag("target", [e.name])
                        say(self.description)
                        damage = Dice.parse(self.damage_dice)
-                       e.receive_damage(damage, self)
+                       e.receive_damage(damage, caster)
                        break
                 else:
                     say('No target identified')

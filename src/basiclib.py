@@ -488,8 +488,10 @@ def start(game_description, world_update, help=True):
         if not cmd:
             continue
 
+        game_description.should_update_turn = True
         _handle_command(cmd)
-        world_update()
+        if game_description.should_update_turn:
+            world_update()
 
 
 def say(msg):

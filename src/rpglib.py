@@ -3,6 +3,9 @@ import basiclib
 
 import spell
 import creatures
+from dice import Dice
+
+import utils
 
 import random
 import sys
@@ -26,6 +29,11 @@ class Player:
             creatures.creatures_list["Little demon"]
         ]
 
+        self.creatures = []
+
+    def is_dead(self):
+        return self.current_HP <= 0
+
     def get_health_str(self):
         return str(self.current_HP) + "/" + str(self.max_HP)
 
@@ -40,7 +48,7 @@ class Player:
     def receive_damage(self, damage, source):
         say("Wizard Owl received " + str(damage) + " points of damage")
         self.current_HP = self.current_HP - damage
-        if self.current_HP <= 0:
+        if self.is_dead():
             say("Wizard Owl was slaughtered by " + source.name)
             say("Game Over")
             sys.exit()
@@ -79,6 +87,9 @@ class Enemy:
 
         self.current_room = None
 
+    def is_dead(self):
+        return self.current_HP <= 0
+
     def get_STR_MOD(self):
         if self.STR < 6:
             return 1
@@ -112,6 +123,8 @@ class Enemy:
             if self.is_attack_successful():
                 damage = self.get_attack_damage()
                 self.attack_target.receive_damage(damage, self)
+                if self.attack_target.is_dead():
+                    self.state == EnemyState.Idle
             else:
                 say(self.attack_target_name + " dodges attack")
 
@@ -121,6 +134,12 @@ class Enemy:
         if self.current_HP <= 0:
             say(self.name + " is dead.")
             self.state = EnemyState.Dead
+        elif self.state == EnemyState.Idle or ( \
+             self.attack_target != source   \
+            ):
+            # Enemy should attack whatever attack him
+            self.state = EnemyState.Attack
+            self.attack_target = source
 
 
 enemies = [
@@ -225,8 +244,10 @@ def show_inventory():
 @when('cast list')
 def list_magic():
     global rpg_game
+    i = 0
     for m in rpg_game.player.learned_spells:
-        say(m.name)
+        say(str(i) + ': ' + m.name)
+        i = i + 1
 
 @when('cast', magic=None)
 @when('cast MAGIC')
@@ -240,14 +261,16 @@ def cast(magic):
         if len(magic) >= magic_name_size and \
           magic[:magic_name_size].lower() == m.name.lower():
             # print(magic)
-            m.cast(rpg_game, magic[magic_name_size:])
+            m.cast(rpg_game.player, rpg_game, magic[magic_name_size:])
             break
 
 @when('invoke list')
 def list_invokable_creatures():
     global rpg_game
+    i = 0
     for c in rpg_game.player.learned_invokable_creatures:
-        say(c.name)
+        say(str(i) + ': ' + c.name)
+        i = i + 1
 
 @when('invoke CREATURE')
 def invoke(creature):
@@ -255,13 +278,25 @@ def invoke(creature):
     if creature == None:
         say("Which creature you would like to invoke?")
         return
+    i = 0
+    wc = creature.strip().split()
     for c in rpg_game.player.learned_invokable_creatures:
         creature_name_size = len(c.name)
-        if len(creature) >= creature_name_size and \
-          creature[:creature_name_size].lower() == c.name.lower():
+        if (utils.is_int(wc[0]) and int(wc[0]) == i) or (\
+            len(creature) >= creature_name_size and \
+            creature[:creature_name_size].lower() == c.name.lower()):
             # print(magic)
             c.invoke(rpg_game, creature[creature_name_size:])
             break
+        i = i + 1
+
+@when('creatures list')
+def list_creatures():
+    global rpg_game
+    i = 0
+    for c in rpg_game.player.creatures:
+        say(str(i) + ': ' + c.name)
+        i = i + 1
 
 @when('alias NAME CMD')
 def alias(name, cmd):
@@ -272,10 +307,13 @@ def alias(name, cmd):
 def status():
     global rpg_game
     rpg_game.player.status()
+    rpg_game.should_update_turn = False
 
 
 def world_update():
     global rpg_game
+    for c in rpg_game.player.creatures:
+        c.update_action(rpg_game)
     for e in rpg_game.current_room.enemies:
         e.update_action(rpg_game)
 
