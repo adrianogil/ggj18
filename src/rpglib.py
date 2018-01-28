@@ -129,7 +129,7 @@ def take(item):
     obj = rpg_game.current_room.items.take(item)
     if obj:
         say('You pick up the %s.' % obj)
-        inventory.add(obj)
+        rpg_game.player.inventory.add(obj)
     else:
         say('There is no %s here.' % item)
 
@@ -159,6 +159,7 @@ def show_inventory():
     global rpg_game
     for thing in rpg_game.player.inventory:
         say(thing)
+    rpg_game.should_update_turn = False
 
 @when('cast list')
 def list_magic():

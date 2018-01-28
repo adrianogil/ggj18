@@ -2,6 +2,8 @@ from basiclib import say
 
 from dice import Dice
 
+from grammar import SimpleGrammar
+
 import random
 
 class EnemyState:
@@ -11,13 +13,10 @@ class EnemyState:
     Dead = 3
 
 class Enemy:
-    def __init__(self, name, HP, STR):
+    def __init__(self, name):
         self.name = name
 
-        self.max_HP = HP
-        self.current_HP = self.max_HP
-
-        self.STR = STR
+        self.STR = 0
 
         self.attack_target = None
         self.attack_target_name = ""
@@ -25,6 +24,22 @@ class Enemy:
         self.state = EnemyState.Idle
 
         self.current_room = None
+
+        self.attacks = []
+
+    def add_attack(self, attack_descripton_grammar, damage_dice):
+        self.attacks.append({
+            "description_grammar" : attack_descripton_grammar,
+            "damage_dice" : damage_dice
+            })
+
+        return self
+
+    def setHP(self, HP):
+        self.max_HP = HP
+        self.current_HP = self.max_HP
+
+        return self
 
     def is_dead(self):
         return self.current_HP <= 0
@@ -60,15 +75,23 @@ class Enemy:
             if self.attack_target.is_dead():
                 self.state == EnemyState.Idle
             else:
-                say(self.name + " is attacking " + self.attack_target_name)
-                # print('UpdateAction - Attack')
-                if self.is_attack_successful():
-                    damage = self.get_attack_damage()
-                    self.attack_target.receive_damage(damage, self)
-                    if self.attack_target.is_dead():
-                        self.state == EnemyState.Idle
-                else:
-                    say(self.attack_target_name + " dodges attack")
+                self.attack(game_description)
+
+    def attack(self, game_description):
+        if len(self.attacks) > 0:
+            attack = random.choice(self.attacks)
+            say(attack['description_grammar']
+                    .add_tag('name', [self.name])
+                    .add_tag('target', [self.attack_target_name])
+                    )
+            # print('UpdateAction - Attack')
+            if self.is_attack_successful():
+                damage = Dice.parse(attack['damage_dice'])
+                self.attack_target.receive_damage(damage, self)
+                if self.attack_target.is_dead():
+                    self.state == EnemyState.Idle
+            else:
+                say(self.attack_target_name + " dodges attack")
 
     def receive_damage(self, damage, source):
         say(self.name + " received " + str(damage) + " points of damage")
@@ -86,7 +109,14 @@ class Enemy:
 
 
 enemies = [
-        Enemy("Kobold", 3, 8),
-        Enemy("Kobold Sr", 10, 20),
-        Enemy("Skull", 5, 25)
+        Enemy("Kobold")
+            .setHP(5)
+            .add_attack(SimpleGrammar()
+                .set_text("#attack#")
+                .add_tag("attack", [
+                    "#name# is attacking #target# with its claws"
+                    ]),
+                '1d4')
+        # Enemy("Kobold Sr", 10, 20),
+        # Enemy("Skull", 5, 25)
     ]
