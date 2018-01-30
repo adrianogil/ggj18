@@ -23,14 +23,6 @@ class Player:
         self.max_MP = 15
         self.current_MP = self.max_MP
 
-        self.learned_spells = [
-            spell.spell_list["Magic missiles"]
-        ]
-
-        self.learned_invokable_creatures = [
-            creatures.creatures_list["Little demon"]
-        ]
-
         self.creatures = []
 
     def is_dead(self):
@@ -74,6 +66,18 @@ def get_random_enemy():
 
 
 class Enemy(enemies.Enemy):
+    """Reimplement"""
+
+
+class SpellType(spell.SpellType):
+    """Reimplement"""
+
+
+class Spell(spell.Spell):
+    """Reimplement"""
+
+
+class Creature(creatures.Creature):
     """Reimplement"""
 
 

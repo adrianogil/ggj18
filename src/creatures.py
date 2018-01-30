@@ -133,10 +133,3 @@ class Creature:
             self.state = CreatureState.Attack
             self.attack_target = source
             self.attack_target_name = source.name
-
-creatures_list = {
-    "Little demon" : Creature("Little demon", 4)
-                        .setHP(5)
-                        .set_cast_time(10)
-                        .set_damage_dice('1d4')
-}

@@ -1,5 +1,5 @@
 import rpglib
-from rpglib import Enemy
+from rpglib import Enemy, Spell, SpellType, Creature
 
 from grammar import SimpleGrammar
 
@@ -34,6 +34,8 @@ def get_description():
     game_description = rpglib.GameDescription()
     game_description.current_room = starting_room
     game_description.player.inventory = rpglib.Bag() # Empty inventory
+
+    game_description.player.name = 'Wizard Owl'
 
     game_description.defined_enemies = [
         ###############################################################################
@@ -79,5 +81,39 @@ def get_description():
                 '1d4')
         ###############################################################################
     ]
+
+    defined_spells = {
+        "Magic missiles" : Spell("Magic missiles", 
+                        SimpleGrammar().set_text("A missile of magical energy darts forth from your fingertip and strikes #target#"),
+                         SpellType.Attack)
+                    .set_damage('1d4+1')
+                    .set_MP_cost(1),
+        "Fireball" : Spell("Fireball", 
+                        SimpleGrammar().set_text("An explosion of flame that detonates with a low roar towards #target#"),
+                         SpellType.Attack)
+                    .set_damage('3d4+4')
+                    .set_MP_cost(5)
+                    .set_target_number(-1),
+    }
+    game_description.defined_spells = defined_spells
+
+    learned_spells = [
+        defined_spells["Magic missiles"],
+        defined_spells["Fireball"],
+    ]
+    game_description.player.learned_spells = learned_spells
+
+    defined_creatures = {
+        "Little demon" : Creature("Little demon", 4)
+                        .setHP(5)
+                        .set_cast_time(10)
+                        .set_damage_dice('1d4')
+    }
+    game_description.player.defined_creatures = defined_creatures
+
+    game_description.player.learned_invokable_creatures = [
+            defined_creatures["Little demon"]
+    ]
+
 
     return game_description
