@@ -89,10 +89,16 @@ def get_description():
                     .set_damage('1d4+1')
                     .set_MP_cost(1),
         "Fireball" : Spell("Fireball", 
-                        SimpleGrammar().set_text("An explosion of flame that detonates with a low roar towards #target#"),
+                        SimpleGrammar().set_text("An explosion of flame that detonates with a low roar"),
                          SpellType.Attack)
                     .set_damage('3d4+4')
                     .set_MP_cost(5)
+                    .set_target_number(-1),
+        "Fire Storm" : Spell("Fire Storm", 
+                        SimpleGrammar().set_text("the whole area is shot through with sheets of roaring flame"),
+                         SpellType.Attack)
+                    .set_damage('4d4+5')
+                    .set_MP_cost(6)
                     .set_target_number(-1),
     }
     game_description.defined_spells = defined_spells
@@ -100,6 +106,7 @@ def get_description():
     learned_spells = [
         defined_spells["Magic missiles"],
         defined_spells["Fireball"],
+        defined_spells["Fire Storm"],
     ]
     game_description.player.learned_spells = learned_spells
 
