@@ -100,6 +100,13 @@ def get_description():
                     .set_damage('4d4+5')
                     .set_MP_cost(6)
                     .set_target_number(-1),
+        "Acid Arrow" : Spell("Acid Arrow", 
+                        SimpleGrammar().set_text("A magical arrow of acid springs from your hand and speeds to #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d4+2')
+                    .set_MP_cost(2)
+                    .set_target_number(-1),
+
     }
     game_description.defined_spells = defined_spells
 
