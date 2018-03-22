@@ -285,5 +285,6 @@ def world_update():
 def start(description_object):
     global rpg_game
     rpg_game = description_object.get_description()
+    # rpg_game.daiy_log
     look()
     basiclib.start(rpg_game, world_update)

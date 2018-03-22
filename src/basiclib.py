@@ -482,6 +482,8 @@ def start(game_description, world_update, help=True):
         qmark.orig_pattern = '?'
         commands.insert(0, (Command('help'), help, {}))
         commands.insert(0, (qmark, help, {}))
+    global turn_number
+    turn_number = 0
     while True:
         try:
             cmd = input(prompt()).strip()
@@ -496,6 +498,7 @@ def start(game_description, world_update, help=True):
         _handle_command(cmd)
         if game_description.should_update_turn:
             world_update()
+            turn_number = turn_number + 1
 
 
 def say(msg):
@@ -516,8 +519,13 @@ def say(msg):
     print('\n\n'.join(formatted))
 
 
+def quit():
+    global turn_number
+    print("Game finished after %s turns." % (turn_number))
+    sys.exit()
+
 commands = [
-    (Command('quit'), sys.exit, {}),  # quit command is built-in
+    (Command('quit'), quit, {}),  # quit command is built-in
 ]
 aliases = [
 ]
