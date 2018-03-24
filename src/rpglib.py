@@ -25,6 +25,14 @@ class Player:
 
         self.creatures = []
 
+    def set_max_HP(self, max_HP):
+        self.max_HP = max_HP
+        self.current_HP = self.max_HP
+
+    def set_max_MP(self, max_MP):
+        self.max_MP = max_MP
+        self.current_MP = self.max_MP        
+
     def is_dead(self):
         return self.current_HP <= 0
 

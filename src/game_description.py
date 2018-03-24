@@ -3,6 +3,8 @@ from rpglib import Enemy, Spell, SpellType, Creature
 
 from grammar import SimpleGrammar
 
+from dice import Dice
+
 def set_random_enemy(room):
     room.set_enemies([rpglib.get_random_enemy()])
 
@@ -35,6 +37,8 @@ def get_description():
     game_description.current_room = starting_room
     game_description.player.inventory = rpglib.Bag() # Empty inventory
 
+    game_description.player.set_max_HP(Dice.parse('6d4+1d10+5'))
+    game_description.player.set_max_MP(Dice.parse('3d7+2d10+3'))
     game_description.player.name = 'Wizard Owl'
 
     game_description.defined_enemies = [
