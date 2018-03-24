@@ -1,0 +1,12 @@
+alias s status
+alias v0 invoke 0
+alias v1 invoke 1
+alias v2 invoke 2
+alias vl invoke list
+alias cl cast list
+alias c0 cast 0
+alias c1 cast 1
+alias c2 cast 2
+alias i inventory
+alias l look
+alias q quit

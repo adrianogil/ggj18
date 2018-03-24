@@ -12,6 +12,8 @@ import utils
 import random
 import sys
 
+import os
+
 class Player:
     def __init__(self):
         self.inventory = None
@@ -224,6 +226,7 @@ def list_invokable_creatures():
         i = i + 1
     rpg_game.should_update_turn = False
 
+@when('invoke', creature = None)
 @when('invoke CREATURE')
 def invoke(creature):
     global rpg_game
@@ -293,6 +296,25 @@ def world_update():
 def start(description_object):
     global rpg_game
     rpg_game = description_object.get_description()
+    read_config_file()
     # rpg_game.daiy_log
     look()
     basiclib.start(rpg_game, world_update)
+
+def read_config_file():
+    print('Reading config file...')
+    file_path = os.environ['GGJ18_DATA_DIR'] + '/config.actions'
+
+    if not os.path.exists(file_path):
+        print('There is no config file!\n')
+        return
+
+
+    with open(file_path, 'r') as f:
+        config_lines = f.readlines()
+
+    for l in config_lines:
+        l = l .strip()
+        basiclib._handle_command(l, False)
+
+    print('Config file loaded successfuly!\n')

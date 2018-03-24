@@ -445,7 +445,7 @@ def _handle_pattern(ws, cmd):
         else: 
             no_command_matches(cmd)
 
-def _handle_command(cmd):
+def _handle_command(cmd, jump_line=True):
     """Handle a command typed by the user."""
     ws = cmd.lower().split()
     wset = []
@@ -469,7 +469,8 @@ def _handle_command(cmd):
     if concat_mode and len(wset) > 0:
         _handle_pattern(wset, wcmd)
     # Jump line
-    print()
+    if jump_line:
+        print()
 
 
 def start(game_description, world_update, help=True):
