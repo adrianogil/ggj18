@@ -38,10 +38,12 @@ def get_description():
     .set_player_enter_callback(set_random_enemy)
 
     green_room = corridor.west = rpglib.Room(SG().set_text("""
-    You are in a #place_description#.
+    You are in #place_description#.
     """).at("place_description", [
-        "alien place that can't be really explained",
-        "very strange abandoned bar"
+        "an alien place that can't be really explained",
+        "a very strange abandoned bar",
+        "a mistic and dark temple",
+        "an old and dirty cave"
     ]))\
     .set_name('Room 05')\
     .set_player_enter_callback(set_random_enemy)
