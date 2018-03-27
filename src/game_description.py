@@ -103,7 +103,22 @@ def get_description():
                 .add_tag("attack", [
                     "#name# is attacking #target# with its spear"
                     ]),
-                '1d4')
+                '1d4'),
+        Enemy("Baby Demon")
+            .setHP('2d6')
+            .set_granted_XP(Dice.parse('2d4+2d6'))
+            .add_attack(SimpleGrammar()
+                .set_text("#attack#")
+                .add_tag("attack", [
+                    "#name# is attacking #target# with its small claws"
+                    ]),
+                '1d6+1')
+            .add_attack(SimpleGrammar()
+                .set_text("#attack#")
+                .add_tag("attack", [
+                    "#name# is attacking #target# with its teeth"
+                    ]),
+                '2d4')
         ###############################################################################
     ]
 

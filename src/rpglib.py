@@ -21,6 +21,7 @@ class Player:
         self.level = 1
         self.experience_points = 0
 
+        self.coins = 0
         
         self.max_HP = 10
         self.current_HP = self.max_HP
@@ -254,6 +255,8 @@ def show_inventory():
     for thing in rpg_game.player.inventory:
         say(thing)
     rpg_game.should_update_turn = False
+    say("")
+    say("Coins: %s" % (rpg_game.player.coins,))
 
 @when('cast list')
 def list_magic():
