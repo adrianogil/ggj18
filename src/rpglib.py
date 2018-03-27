@@ -113,6 +113,10 @@ class Creature(creatures.Creature):
 class Room(basiclib.Room):
     """Reimplement"""
 
+    def add_known_direction(self, direction):
+        if not direction in self.known_directions:
+            self.known_directions.append(direction)
+
     def set_name(self, name):
         self.name = name
 
@@ -191,8 +195,10 @@ def go(direction):
     if room is None:
         say("You can't go " + direction)
     else:
-        if not direction in rpg_game.current_room.known_directions:
-            rpg_game.current_room.known_directions.append(direction)
+        rpg_game.current_room.add_known_direction(direction)
+        # if direction == 'north':
+        #     room.add_known_direction('south')
+
         last_room = rpg_game.current_room
         rpg_game.current_room = room
         say('You go %s.' % direction)

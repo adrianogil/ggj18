@@ -109,7 +109,7 @@ def get_description():
                     .set_MP_cost(5)
                     .set_target_number(-1),
         "Fire Storm" : Spell("Fire Storm", 
-                        SimpleGrammar().set_text("the whole area is shot through with sheets of roaring flame"),
+                        SimpleGrammar().set_text("The whole area is shot through with sheets of roaring flame"),
                          SpellType.Attack)
                     .set_damage('4d4+5')
                     .set_MP_cost(6)
