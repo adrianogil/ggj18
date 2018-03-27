@@ -71,9 +71,11 @@ class Player:
             return True
         return False
 
-    def get_victory_from(self, enemy):
+    def get_victory_from(self, enemy, loot=None):
         self.add_XP(enemy.granted_xp)
         say("Player received %s points of experience." % ( enemy.granted_xp,) )
+        if not loot is None:
+            say('Player received loot')
 
     def add_XP(self, new_xp):
         self.experience_points = self.experience_points + new_xp
