@@ -18,6 +18,8 @@ class Enemy:
     def __init__(self, name):
         self.name = name
 
+        self.granted_xp = 10
+
         self.STR = 0
 
         self.attack_target = None
@@ -49,6 +51,11 @@ class Enemy:
 
     def set_description(self, description):
         self.description = description
+
+        return self
+
+    def set_granted_XP(self, granted_xp):
+        self.granted_xp = granted_xp
 
         return self
 
@@ -110,6 +117,7 @@ class Enemy:
         if self.current_HP <= 0:
             say(self.name + " is dead.")
             self.state = EnemyState.Dead
+            source.get_victory_from(self)
         elif self.state == EnemyState.Idle or ( \
              self.attack_target != source   \
             ):

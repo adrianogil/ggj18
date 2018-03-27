@@ -17,7 +17,10 @@ import os
 class Player:
     def __init__(self):
         self.inventory = None
+        
         self.level = 1
+        self.experience_points = 0
+
         
         self.max_HP = 10
         self.current_HP = self.max_HP
@@ -26,6 +29,9 @@ class Player:
         self.current_MP = self.max_MP
 
         self.creatures = []
+
+    def get_exp_for_next_level(self):
+        return self.level * 100;
 
     def set_max_HP(self, max_HP):
         self.max_HP = max_HP
@@ -45,7 +51,8 @@ class Player:
         return str(self.current_MP) + "/" + str(self.max_MP)
 
     def status(self):
-        say("Wizard Owl Lv " + str(self.level))
+        say("Wizard Owl Lv " + str(self.level) + " (XP " + \
+            str(self.experience_points) + "/" + str(self.get_exp_for_next_level()) + ')')
         say("HP " + self.get_health_str())
         say("MP " + self.get_mana_str())
 
@@ -62,6 +69,18 @@ class Player:
             self.current_MP = self.current_MP - MP_usage
             return True
         return False
+
+    def get_victory_from(self, enemy):
+        self.add_XP(enemy.granted_xp)
+        say("Player received %s points of experience." % ( enemy.granted_xp,) )
+
+    def add_XP(self, new_xp):
+        self.experience_points = self.experience_points + new_xp
+        xp_next_level = self.get_exp_for_next_level()
+        if self.experience_points >= xp_next_level:
+            self.level = self.level + 1
+            self.experience_points = self.experience_points - xp_next_level
+
 
 class GameDescription:
     def __init__(self):

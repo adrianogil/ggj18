@@ -2,6 +2,7 @@ import rpglib
 from rpglib import Enemy, Spell, SpellType, Creature
 
 from grammar import SimpleGrammar
+from grammar import SimpleGrammar as SG
 
 from dice import Dice
 
@@ -45,6 +46,7 @@ def get_description():
         ###############################################################################
         Enemy("Kobold")
             .setHP('2d4+1')
+            .set_granted_XP(Dice.parse('3d10'))
             .add_attack(SimpleGrammar()
                 .set_text("#attack#")
                 .add_tag("attack", [
@@ -54,6 +56,7 @@ def get_description():
         ###############################################################################
         Enemy("Baby Werewolf")
             .setHP('2d6+3')
+            .set_granted_XP(Dice.parse('1d10+3d6+10'))
             .add_attack(SimpleGrammar()
                 .set_text("#attack#")
                 .add_tag("attack", [
@@ -71,6 +74,7 @@ def get_description():
         ###############################################################################
         Enemy("Goblin")
             .setHP(4)
+            .set_granted_XP(Dice.parse('2d4'))
             .add_attack(SimpleGrammar()
                 .set_text("#attack#")
                 .add_tag("attack", [
