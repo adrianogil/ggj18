@@ -6,6 +6,8 @@ from grammar import SimpleGrammar as SG
 
 from dice import Dice
 
+Dp = Dice.parse
+
 def set_random_enemy(room):
     room.set_enemies([rpglib.get_random_enemy()])
 
@@ -14,22 +16,26 @@ def get_description():
 
     starting_room = rpglib.Room("""
     You are in a dark room.
-    """).set_name('Room 01')
+    """)\
+    .set_name('Room 01')
 
     corridor = starting_room.north = rpglib.Room("""
     You are in a big corridor that smells odly.
-    """).set_name('Room 02')
-    corridor.set_player_enter_callback(set_random_enemy)
+    """)\
+    .set_name('Room 02')\
+    .set_player_enter_callback(set_random_enemy)
 
     dark_lab = corridor.north = rpglib.Room("""
     You are in a dark laboratory.
-    """).set_name('Room 03')
-    dark_lab.set_player_enter_callback(set_random_enemy)
+    """)\
+    .set_name('Room 03')\
+    .set_player_enter_callback(set_random_enemy)
 
     green_room = corridor.east = rpglib.Room("""
     You are in a green rooom.
-    """).set_name('Room 04')
-    green_room.set_player_enter_callback(set_random_enemy)
+    """)\
+    .set_name('Room 04')\
+    .set_player_enter_callback(set_random_enemy)
 
     mallet = rpglib.Item('rusty mallet', 'mallet')
     corridor.items = rpglib.Bag({mallet,})

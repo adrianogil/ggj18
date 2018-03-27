@@ -120,12 +120,15 @@ class Room(basiclib.Room):
 
     def set_player_enter_callback(self, callback):
         self.enter_callback = callback;
+        return self
 
     def set_player_stay_callback(self, callback):
         self.stay_callback = callback;
+        return self
 
     def set_player_exit_callback(self, callback):
         self.exit_callback = callback;
+        return self
 
     def on_player_enter(self):
         if self.enter_callback is not None:
@@ -141,6 +144,7 @@ class Room(basiclib.Room):
         for e in enemies:
             e.current_room = self
         self.enemies = enemies
+        return self
 
 
 class Bag(basiclib.Bag):
@@ -150,6 +154,32 @@ class Bag(basiclib.Bag):
 class Item(basiclib.Item):
     """Reimplement"""
 
+@when('where am i')
+def whereami():
+    global rpg_game
+    room = rpg_game.current_room
+    say("You are in " + room.name)
+
+@when('directions')
+def available_directions():
+    global rpg_game
+    directions = rpg_game.current_room.known_directions
+    if len(directions) == 0:
+        say("You don't know any direction at this place")
+    else:
+        str_directions = 'You have already gone to '
+        for i in range(0, len(directions)):
+            d = directions[i]
+            if len(directions) > 1 and i == len(directions) - 1:
+                str_directions = str_directions + ' and ' + d
+            elif i == len(directions) - 1:
+                str_directions = str_directions + d
+            elif len(directions) > 0 and i > 0:
+                str_directions = str_directions + ', ' + d
+            else:
+                str_directions = str_directions + d
+        say(str_directions)
+
 
 @when('north', direction='north')
 @when('south', direction='south')
@@ -158,14 +188,17 @@ class Item(basiclib.Item):
 def go(direction):
     global rpg_game
     room = rpg_game.current_room.exit(direction)
-    if room:
+    if room is None:
+        say("You can't go " + direction)
+    else:
+        if not direction in rpg_game.current_room.known_directions:
+            rpg_game.current_room.known_directions.append(direction)
         last_room = rpg_game.current_room
         rpg_game.current_room = room
         say('You go %s.' % direction)
         look()
-        if room != last_room:
+        if room is not last_room:
             room.on_player_enter()
-
 
 
 @when('take ITEM')

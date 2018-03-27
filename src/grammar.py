@@ -4,6 +4,12 @@ class SimpleGrammar:
     def __init__(self):
         self.reset_tags()
 
+    def st(self, text):
+        return self.set_text(text)
+
+    def at(self, tag, expression):
+        return self.add_tag(tag, expression)
+
     def set_text(self,text):
         self.main_text = text
 

@@ -10,7 +10,9 @@ alias c2 cast 2
 alias i inventory
 alias l look
 alias q quit
+alias d directions
 alias dn north
 alias ds south
 alias dw west
 alias de east
+alias w where am i

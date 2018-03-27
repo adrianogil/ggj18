@@ -84,6 +84,7 @@ class Room:
     def __init__(self, description):
         self.description = description.strip()
         self.enemies = []
+        self.known_directions = []
 
         self.enter_callback = None
         self.exit_callback = None
