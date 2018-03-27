@@ -144,6 +144,16 @@ class Room(basiclib.Room):
     def on_player_exit(self):
         self.exit_callback(self)
 
+    def add_enemy(self, enemy):
+        if self.enemies == None:
+            self.enemies = [enemy]
+        else:
+            self.enemies.append(enemy)
+
+    def remove_enemy(self, enemy):
+        if enemy in self.enemies:
+            self.enemies.remove(enemy)
+
     def set_enemies(self, enemies):
         for e in enemies:
             e.current_room = self

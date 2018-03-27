@@ -37,6 +37,15 @@ def get_description():
     .set_name('Room 04')\
     .set_player_enter_callback(set_random_enemy)
 
+    green_room = corridor.west = rpglib.Room(SG().set_text("""
+    You are in a #place_description#.
+    """).at("place_description", [
+        "alien place that can't be really explained",
+        "very strange abandoned bar"
+    ]))\
+    .set_name('Room 05')\
+    .set_player_enter_callback(set_random_enemy)
+
     mallet = rpglib.Item('rusty mallet', 'mallet')
     corridor.items = rpglib.Bag({mallet,})
 
@@ -128,6 +137,7 @@ def get_description():
         defined_spells["Magic missiles"],
         defined_spells["Fireball"],
         defined_spells["Fire Storm"],
+        defined_spells["Acid Arrow"],
     ]
     game_description.player.learned_spells = learned_spells
 

@@ -1,5 +1,14 @@
 from random import randint
 
+def opposite_direction(d):
+    if d == 'north':
+        return 'south'
+    elif d == 'south':
+        return 'north'
+    elif d == 'west':
+        return 'east'
+    return 'west'
+
 def capitalize(s):
     return s[0].upper() + s[1:]
 

@@ -82,7 +82,7 @@ class Room:
         setattr(Room, reverse, None)
 
     def __init__(self, description):
-        self.description = description.strip()
+        self.description = str(description).strip()
         self.enemies = []
         self.known_directions = []
 

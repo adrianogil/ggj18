@@ -76,6 +76,24 @@ class Enemy:
     def get_attack_damage(self):
         return int(0.5 * Dice.parse('1d4') * self.get_STR_MOD())
 
+    def go(self, direction):
+        room = self.current_room.exit(direction)
+        if room:
+            last_room = self.current_room
+            self.current_room = room
+            if last_room == game_description.current_room:
+                say(self.name + ' went %s.' % direction)
+            elif self.current_room == game_description.current_room:
+                say(self.name + ' arrived from %s.' % utils.opposite_direction(direction))
+            last_room.remove_enemy(self)
+            self.current_room.add_enemy(self)
+
+            return True
+            # look()
+            # if room != last_room:
+            #     room.on_player_enter()
+        return False
+
     def update_action(self, game_description):
         if self.state == EnemyState.Idle:
             if self.current_room == game_description.current_room:
@@ -89,6 +107,13 @@ class Enemy:
                     say(self.name + " is going to attack " + self.attack_target_name)
                 else:
                     say(self.name + " is wandering loosely")
+            else:
+            # No enemies. Should move? Random move!
+                prob_go_out = random.uniform(0, 1)
+                if prob_go_out < 0.1:
+                    dir = Dice.parse( '1d4')
+                    if not self.go(self.directions[dir-1]):
+                        say(utils.capitalize(self.name) + ' is wandering loosely')
         elif self.state == EnemyState.Attack:
             if self.attack_target.is_dead():
                 self.state == EnemyState.Idle
@@ -118,6 +143,7 @@ class Enemy:
             say(self.name + " is dead.")
             self.state = EnemyState.Dead
             source.get_victory_from(self)
+            self.current_room.remove_enemy(self)
         elif self.state == EnemyState.Idle or ( \
              self.attack_target != source   \
             ):
