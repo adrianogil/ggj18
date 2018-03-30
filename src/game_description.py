@@ -51,6 +51,8 @@ def get_description():
     mallet = rpglib.Item('rusty mallet', 'mallet')
     corridor.items = rpglib.Bag({mallet,})
 
+    red_potion = rpglib.Item('red potion', 'potion')
+
     game_description = rpglib.GameDescription()
     game_description.current_room = starting_room
     game_description.player.inventory = rpglib.Bag() # Empty inventory
@@ -69,11 +71,12 @@ def get_description():
                 .add_tag("attack", [
                     "#name# is attacking #target# with its claws"
                     ]),
-                '1d4'),
+                '1d4')
+            .set_loot({"coins": Dp("2d10"), "items" : [red_potion]}),
         ###############################################################################
         Enemy("Baby Werewolf")
             .setHP('2d6+3')
-            .set_granted_XP(Dice.parse('1d10+3d6+10'))
+            .set_granted_XP(Dice.parse('5d4+1d10+3d6+10'))
             .add_attack(SimpleGrammar()
                 .set_text("#attack#")
                 .add_tag("attack", [
@@ -87,7 +90,8 @@ def get_description():
                     ]),
                 '2d4')
             .set_description("A werewolf is a savage predator in a terrifying hybrid form," + 
-                " a furred and well-muscled humanoid body topped by a ravening wolf’s head."),
+                " a furred and well-muscled humanoid body topped by a ravening wolf’s head.")
+            .set_loot({"coins": Dp("3d10+5"), "items" : [red_potion]}),
         ###############################################################################
         Enemy("Goblin")
             .setHP(4)
@@ -103,7 +107,8 @@ def get_description():
                 .add_tag("attack", [
                     "#name# is attacking #target# with its spear"
                     ]),
-                '1d4'),
+                '1d4')
+            .set_loot({"coins": Dp("2d10"), "items" : [red_potion]}),
         Enemy("Baby Demon")
             .setHP('2d6')
             .set_granted_XP(Dice.parse('2d4+2d6'))
@@ -119,6 +124,7 @@ def get_description():
                     "#name# is attacking #target# with its teeth"
                     ]),
                 '2d4')
+            .set_loot({"coins": Dp("2d10"), "items" : [red_potion]})
         ###############################################################################
     ]
 

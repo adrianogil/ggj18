@@ -31,6 +31,13 @@ class Enemy:
 
         self.attacks = []
 
+        self.loot = {}
+
+    def set_loot(self, loot):
+        self.loot = loot
+
+        return self
+
     def add_attack(self, attack_descripton_grammar, damage_dice):
         self.attacks.append({
             "description_grammar" : attack_descripton_grammar,
@@ -142,7 +149,7 @@ class Enemy:
         if self.current_HP <= 0:
             say(self.name + " is dead.")
             self.state = EnemyState.Dead
-            source.get_victory_from(self)
+            source.get_victory_from(self, self.loot)
             self.current_room.remove_enemy(self)
         elif self.state == EnemyState.Idle or ( \
              self.attack_target != source   \
