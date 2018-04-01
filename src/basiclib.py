@@ -5,6 +5,9 @@ import readline  # noqa: adds readline semantics to input()
 import textwrap
 import random
 from copy import deepcopy
+
+from item import Item
+
 try:
     from shutil import get_terminal_size
 except ImportError:
@@ -57,99 +60,6 @@ class Placeholder:
 
     def __str__(self):
         return self.name.upper()
-
-
-class Room:
-    """A generic room object that can be used by game code."""
-
-    _directions = {}
-
-    @staticmethod
-    def add_direction(forward, reverse):
-        """Add a direction."""
-        for dir in (forward, reverse):
-            if not dir.islower():
-                raise InvalidCommand(
-                    'Invalid direction %r: directions must be all lowercase.'
-                )
-            if dir in Room._directions:
-                raise KeyError('%r is already a direction!' % dir)
-        Room._directions[forward] = reverse
-        Room._directions[reverse] = forward
-
-        # Set class attributes to None to act as defaults
-        setattr(Room, forward, None)
-        setattr(Room, reverse, None)
-
-    def __init__(self, description):
-        self.description = str(description).strip()
-        self.enemies = []
-        self.known_directions = []
-
-        self.enter_callback = None
-        self.exit_callback = None
-        self.stay_callback = None
-
-        # Copy class Bags to instance variables
-        for k, v in vars(type(self)).items():
-            if isinstance(v, Bag):
-                setattr(self, k, deepcopy(v))
-
-    def __str__(self):
-        return self.description
-
-    def exit(self, direction):
-        """Get the exit of a room in a given direction.
-
-        Return None if the room has no exit in a direction.
-
-        """
-        if direction not in self._directions:
-            raise KeyError('%r is not a direction' % direction)
-        return getattr(self, direction, None)
-
-    def exits(self):
-        """Get a list of directions to exit the room."""
-        return sorted(d for d in self._directions if getattr(self, d))
-
-    def __setattr__(self, name, value):
-        if isinstance(value, Room):
-            if name not in self._directions:
-                raise InvalidDirection(
-                    '%r is not a direction you have declared.\n\n' +
-                    'Try calling Room.add_direction(%r, <opposite>) ' % name +
-                    ' where <opposite> is the return direction.'
-                )
-            reverse = self._directions[name]
-            object.__setattr__(self, name, value)
-            object.__setattr__(value, reverse, self)
-        else:
-            object.__setattr__(self, name, value)
-
-
-Room.add_direction('north', 'south')
-Room.add_direction('east', 'west')
-
-
-class Item:
-    """A generic item object that can be referred to by a number of names."""
-
-    def __init__(self, name, *aliases):
-        self.name = name
-        self.aliases = tuple(
-            label.lower()
-            for label in (name,) + aliases
-        )
-
-    def __repr__(self):
-        return '%s(%s)' % (
-            type(self).__name__,
-            ', '.join(repr(n) for n in self.aliases)
-        )
-
-    def __str__(self):
-        return self.name
-
 
 class Bag(set):
     """A collection of Items, such as in an inventory.

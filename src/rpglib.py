@@ -1,6 +1,8 @@
 from basiclib import when, say
 import basiclib
 
+import room
+
 from dice import Dice
 
 import spell
@@ -119,55 +121,8 @@ class Creature(creatures.Creature):
     """Reimplement"""
 
 
-class Room(basiclib.Room):
+class Room(room.Room):
     """Reimplement"""
-
-    def add_known_direction(self, direction):
-        if not direction in self.known_directions:
-            self.known_directions.append(direction)
-
-    def set_name(self, name):
-        self.name = name
-
-        return self
-
-    def set_player_enter_callback(self, callback):
-        self.enter_callback = callback;
-        return self
-
-    def set_player_stay_callback(self, callback):
-        self.stay_callback = callback;
-        return self
-
-    def set_player_exit_callback(self, callback):
-        self.exit_callback = callback;
-        return self
-
-    def on_player_enter(self):
-        if self.enter_callback is not None:
-            self.enter_callback(self)
-
-    def on_player_stay(self):
-        self.stay_callback(self)
-
-    def on_player_exit(self):
-        self.exit_callback(self)
-
-    def add_enemy(self, enemy):
-        if self.enemies == None:
-            self.enemies = [enemy]
-        else:
-            self.enemies.append(enemy)
-
-    def remove_enemy(self, enemy):
-        if enemy in self.enemies:
-            self.enemies.remove(enemy)
-
-    def set_enemies(self, enemies):
-        for e in enemies:
-            e.current_room = self
-        self.enemies = enemies
-        return self
 
 
 class Bag(basiclib.Bag):
@@ -224,6 +179,17 @@ def go(direction):
         look()
         if room is not last_room:
             room.on_player_enter()
+
+
+@when('consume ITEM')
+def consume(item):
+    global rpg_game
+    # obj = rpg_game.current_room.items.take(item)
+    # if obj:
+    #     say('You pick up the %s.' % obj)
+    #     rpg_game.player.inventory.add(obj)
+    # else:
+    #     say('There is no %s here.' % item)
 
 
 @when('take ITEM')

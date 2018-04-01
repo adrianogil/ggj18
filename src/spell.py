@@ -38,6 +38,7 @@ class Spell:
 
     def cast(self, caster, game_description, params):
         # print(params)
+        say('Casting spell "' + self.name + '"')
         params = params.strip()
         wparams = params.strip().split()
         if game_description.player.use_MP(self.MP_cost):
