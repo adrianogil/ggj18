@@ -184,12 +184,12 @@ def go(direction):
 @when('consume ITEM')
 def consume(item):
     global rpg_game
-    # obj = rpg_game.current_room.items.take(item)
-    # if obj:
-    #     say('You pick up the %s.' % obj)
-    #     rpg_game.player.inventory.add(obj)
-    # else:
-    #     say('There is no %s here.' % item)
+    obj = rpg_game.player.inventory.take(item)
+    if obj and obj.is_consumable:
+        say('You pick up the %s.' % obj)
+        obj.consume(rpg_game)
+    else:
+        say('There is no %s here.' % item)
 
 
 @when('take ITEM')

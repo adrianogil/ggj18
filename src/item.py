@@ -7,6 +7,7 @@ class Item:
             label.lower()
             for label in (name,) + aliases
         )
+        self.is_consumable = False
 
     def __repr__(self):
         return '%s(%s)' % (
@@ -16,3 +17,7 @@ class Item:
 
     def __str__(self):
         return self.name
+
+    def consume(self, data):
+        if not self.on_consume is None:
+            self.on_consume(self, data)

@@ -1,12 +1,15 @@
 import rpglib
 from rpglib import Enemy, Spell, SpellType, Creature
+from rpglib import say
 
 from grammar import SimpleGrammar
 from grammar import SimpleGrammar as SG
 
 from dice import Dice
-
 Dp = Dice.parse
+
+import utils
+
 
 def set_random_enemy(room):
     room.set_enemies([rpglib.get_random_enemy()])
@@ -51,7 +54,21 @@ def get_description():
     mallet = rpglib.Item('rusty mallet', 'mallet')
     corridor.items = rpglib.Bag({mallet,})
 
+    def generate_potion_action(cure_value):
+        def cure_action(item, rpg_game_description):
+            cHp = rpg_game_description.player.current_HP
+            cured_points = Dp(cure_value)
+            cHp = cHp + cured_points
+            say(utils.capitalize(item.name) + ' cured ' + str(cured_points) + ' HP points!')
+            if cHp > rpg_game_description.player.max_HP:
+                rpg_game_description.player.current_HP = rpg_game_description.player.max_HP
+            else:
+                rpg_game_description.player.current_HP = cHp
+        return cure_action
+
     red_potion = rpglib.Item('red potion', 'potion')
+    red_potion.is_consumable = True
+    red_potion.on_consume = generate_potion_action('2d6+2')
 
     game_description = rpglib.GameDescription()
     game_description.current_room = starting_room
