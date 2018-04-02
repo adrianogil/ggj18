@@ -66,9 +66,25 @@ def get_description():
                 rpg_game_description.player.current_HP = cHp
         return cure_action
 
+    def generate_elixir_action(cure_value):
+        def elixir_action(item, rpg_game_description):
+            cMp = rpg_game_description.player.current_MP
+            cured_points = Dp(cure_value)
+            cMp = cMp + cured_points
+            say(utils.capitalize(item.name) + ' cured ' + str(cured_points) + ' MP points!')
+            if cMp > rpg_game_description.player.max_MP:
+                rpg_game_description.player.current_MP = rpg_game_description.player.max_MP
+            else:
+                rpg_game_description.player.current_MP = cMp
+        return elixir_action
+
     red_potion = rpglib.Item('red potion', 'potion')
     red_potion.is_consumable = True
     red_potion.on_consume = generate_potion_action('2d6+2')
+
+    blue_elixir = rpglib.Item('blue elixir', 'elixir')
+    blue_elixir.is_consumable = True
+    blue_elixir.on_consume = generate_elixir_action('2d4+3')
 
     game_description = rpglib.GameDescription()
     game_description.current_room = starting_room
@@ -108,7 +124,7 @@ def get_description():
                 '2d4')
             .set_description("A werewolf is a savage predator in a terrifying hybrid form," + 
                 " a furred and well-muscled humanoid body topped by a ravening wolf’s head.")
-            .set_loot({"coins": Dp("3d10+5"), "items" : [red_potion]}),
+            .set_loot({"coins": Dp("3d10+5"), "items" : [blue_elixir]}),
         ###############################################################################
         Enemy("Goblin")
             .setHP(4)
@@ -141,7 +157,7 @@ def get_description():
                     "#name# is attacking #target# with its teeth"
                     ]),
                 '2d4')
-            .set_loot({"coins": Dp("2d10"), "items" : [red_potion]})
+            .set_loot({"coins": Dp("2d10"), "items" : [blue_elixir]})
         ###############################################################################
     ]
 
