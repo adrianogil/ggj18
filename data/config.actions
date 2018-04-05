@@ -17,3 +17,5 @@ alias ds south
 alias dw west
 alias de east
 alias w where am i
+alias crp consume red potion
+alias cbe consume blue elixir
