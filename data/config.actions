@@ -12,6 +12,7 @@ alias i inventory
 alias l look
 alias q quit
 alias d directions
+alias dh directions history
 alias dn north
 alias ds south
 alias dw west

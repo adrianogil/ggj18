@@ -17,6 +17,8 @@ class Player:
 
         self.creatures = []
 
+        self.directions_history = []
+
     def get_exp_for_next_level(self):
         return self.level * 100;
 
@@ -75,3 +77,6 @@ class Player:
         if self.experience_points >= xp_next_level:
             self.level = self.level + 1
             self.experience_points = self.experience_points - xp_next_level
+
+    def add_direction(self, direction):
+        self.directions_history.append(direction)

@@ -63,6 +63,14 @@ def whereami():
     room = rpg_game.current_room
     say("You are in " + room.name)
 
+@when('directions history')
+def show_directions_history():
+    global rpg_game
+    for d in rpg_game.player.directions_history:
+        say(d)
+
+    
+
 @when('directions')
 def available_directions():
     global rpg_game
@@ -94,6 +102,7 @@ def go(direction):
     if room is None:
         say("You can't go " + direction)
     else:
+        rpg_game.player.add_direction(direction)
         rpg_game.current_room.add_known_direction(direction)
         # if direction == 'north':
         #     room.add_known_direction('south')
