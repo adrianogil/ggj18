@@ -11,8 +11,10 @@ Dp = Dice.parse
 import utils
 
 
+
 def set_random_enemy(room):
     room.set_enemies([rpglib.get_random_enemy()])
+
 
 def get_description():
     rpglib.Room.items = rpglib.Bag()
@@ -59,8 +61,18 @@ def get_description():
         "a mistic and dark temple",
         "an old and dirty cave"
     ]))\
-    .set_name('Room 05')\
+    .set_name('Room 06')\
     .set_player_enter_callback(set_random_enemy)
+
+    healing_room = rnd_room2.west = rpglib.Room(SG().set_text("""
+    You are in #place_description#.
+    """).at("place_description", [
+        "an sacred place that make you feels better",
+        "a very strange abandoned bar with a warm energy",
+        "a mistic and dark temple with a healing energy",
+        "an old and dirty cave with a warm energy"
+    ]))\
+    .set_name('Room 07')
 
     mallet = rpglib.Item('rusty mallet', 'mallet')
     corridor.items = rpglib.Bag({mallet,})
@@ -104,6 +116,19 @@ def get_description():
     game_description.player.set_max_HP(Dice.parse('6d4+1d10+5'))
     game_description.player.set_max_MP(Dice.parse('3d7+2d10+3'))
     game_description.player.name = 'Wizard Owl'
+
+
+    def healing_action(room):
+        cure_value = Dice.parse('2d5+3')
+        cHp = rpg_game_description.player.current_HP
+        cured_points = Dp(cure_value)
+        cHp = cHp + cured_points
+        say(utils.capitalize(item.name) + ' cured ' + str(cured_points) + ' HP points!')
+        if cHp > rpg_game_description.player.max_HP:
+            rpg_game_description.player.current_HP = rpg_game_description.player.max_HP
+        else:
+            rpg_game_description.player.current_HP = cHp
+    healing_room.set_player_enter_callback(healing_action)
 
     game_description.defined_enemies = [
         ###############################################################################
