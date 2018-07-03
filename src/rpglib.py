@@ -76,7 +76,7 @@ def available_directions():
     global rpg_game
     directions = rpg_game.current_room.known_directions
     if len(directions) == 0:
-        say("You don't know any direction at this place")
+        say("You don't know any direction from this place")
     else:
         str_directions = 'You have already gone to '
         for i in range(0, len(directions)):
