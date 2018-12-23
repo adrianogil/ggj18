@@ -5,4 +5,4 @@ then
     export PYTHONPATH=$GGJ18_PYTHON_PATH:$PYTHONPATH
 fi
 
-alias ggj18="python3 $GGJ18_DIR/rpglib/game.py"
+alias ggj18-dungeoncrawler="python3 $GGJ18_DIR/games/dungeoncrawler.py"

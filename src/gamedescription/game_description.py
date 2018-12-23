@@ -1,14 +1,14 @@
-import rpglib
-from rpglib import Enemy, Spell, SpellType, Creature
-from rpglib import say
+import rpglib.rpglib as rpglib
+from rpglib.rpglib import Enemy, Spell, SpellType, Creature, Bag, Room, Item, GameDescription
+from rpglib.rpglib import say
 
-from grammar import SimpleGrammar
-from grammar import SimpleGrammar as SG
+from rpglib.grammar import SimpleGrammar
+from rpglib.grammar import SimpleGrammar as SG
 
-from dice import Dice
+from rpglib.dice import Dice
 Dp = Dice.parse
 
-import utils
+import rpglib.utils
 
 
 
@@ -17,32 +17,32 @@ def set_random_enemy(room):
 
 
 def get_description():
-    rpglib.Room.items = rpglib.Bag()
+    Room.items = Bag()
 
-    starting_room = rpglib.Room("""
+    starting_room = Room("""
     You are in a dark room.
     """)\
     .set_name('Room 01')
 
-    corridor = starting_room.north = rpglib.Room("""
+    corridor = starting_room.north = Room("""
     You are in a big corridor that smells odly.
     """)\
     .set_name('Room 02')\
     .set_player_enter_callback(set_random_enemy)
 
-    dark_lab = corridor.north = rpglib.Room("""
+    dark_lab = corridor.north = Room("""
     You are in a dark laboratory.
     """)\
     .set_name('Room 03')\
     .set_player_enter_callback(set_random_enemy)
 
-    green_room = corridor.east = rpglib.Room("""
+    green_room = corridor.east = Room("""
     You are in a green rooom.
     """)\
     .set_name('Room 04')\
     .set_player_enter_callback(set_random_enemy)
 
-    rnd_room2 = dark_lab.west = rpglib.Room(SG().set_text("""
+    rnd_room2 = dark_lab.west = Room(SG().set_text("""
     You are in #place_description#.
     """).at("place_description", [
         "an alien place that can't be really explained",
@@ -53,7 +53,7 @@ def get_description():
     .set_name('Room 05')\
     .set_player_enter_callback(set_random_enemy)
 
-    rnd_room = green_room.west = rpglib.Room(SG().set_text("""
+    rnd_room = green_room.west = Room(SG().set_text("""
     You are in #place_description#.
     """).at("place_description", [
         "an alien place that can't be really explained",
@@ -64,7 +64,7 @@ def get_description():
     .set_name('Room 06')\
     .set_player_enter_callback(set_random_enemy)
 
-    healing_room = rnd_room2.west = rpglib.Room(SG().set_text("""
+    healing_room = rnd_room2.west = Room(SG().set_text("""
     You are in #place_description#.
     """).at("place_description", [
         "an sacred place that make you feels better",
@@ -74,8 +74,8 @@ def get_description():
     ]))\
     .set_name('Room 07')
 
-    mallet = rpglib.Item('rusty mallet', 'mallet')
-    corridor.items = rpglib.Bag({mallet,})
+    mallet = Item('rusty mallet', 'mallet')
+    corridor.items = Bag({mallet,})
 
     def generate_potion_action(cure_value):
         def cure_action(item, rpg_game_description):
@@ -101,17 +101,17 @@ def get_description():
                 rpg_game_description.player.current_MP = cMp
         return elixir_action
 
-    red_potion = rpglib.Item('red potion', 'potion')
+    red_potion = Item('red potion', 'potion')
     red_potion.is_consumable = True
     red_potion.on_consume = generate_potion_action('2d6+2')
 
-    blue_elixir = rpglib.Item('blue elixir', 'elixir')
+    blue_elixir = Item('blue elixir', 'elixir')
     blue_elixir.is_consumable = True
     blue_elixir.on_consume = generate_elixir_action('2d4+3')
 
-    game_description = rpglib.GameDescription()
+    game_description = GameDescription()
     game_description.current_room = starting_room
-    game_description.player.inventory = rpglib.Bag() # Empty inventory
+    game_description.player.inventory = Bag() # Empty inventory
 
     game_description.player.set_max_HP(Dice.parse('6d4+1d10+5'))
     game_description.player.set_max_MP(Dice.parse('3d7+2d10+3'))

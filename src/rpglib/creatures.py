@@ -1,14 +1,14 @@
-from basiclib import say
+from rpglib.basiclib import say
+from rpglib.dice import Dice
+import rpglib.utils as utils
 
-from dice import Dice
-
-import utils
 
 class CreatureState:
     NonExistant = 0
     Idle = 1
     Attack = 2
     Dead = 3
+
 
 class Creature:
     def __init__(self, name, MP_cost):

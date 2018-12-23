@@ -1,20 +1,17 @@
-from basiclib import when, say
-import basiclib
+import rpglib.basiclib as basiclib
+from rpglib.basiclib import when, say
 
-from player import Player
+from rpglib.player import Player
 
-import room
+import rpglib.room as room
 
-from dice import Dice
+import rpglib.spell as spell
+import rpglib.enemies as enemies
+import rpglib.creatures as creatures
 
-import spell
-import enemies
-import creatures
-
-import utils
+import rpglib.utils
 
 import random
-import sys
 
 import os
 

@@ -1,4 +1,5 @@
-from utils import get_random
+from rpglib.utils import get_random
+
 
 class SimpleGrammar:
     def __init__(self):

@@ -1,4 +1,6 @@
-from basiclib import say
+from rpglib.basiclib import say
+import sys
+
 
 class Player:
     def __init__(self):
@@ -20,7 +22,7 @@ class Player:
         self.directions_history = []
 
     def get_exp_for_next_level(self):
-        return self.level * 100;
+        return self.level * 100
 
     def set_max_HP(self, max_HP):
         self.max_HP = max_HP
@@ -40,7 +42,7 @@ class Player:
         return str(self.current_MP) + "/" + str(self.max_MP)
 
     def status(self):
-        say("Wizard Owl Lv " + str(self.level) + " (XP " + \
+        say("Wizard Owl Lv " + str(self.level) + " (XP " +
             str(self.experience_points) + "/" + str(self.get_exp_for_next_level()) + ')')
         say("HP " + self.get_health_str())
         say("MP " + self.get_mana_str())

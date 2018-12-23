@@ -1,18 +1,16 @@
-from basiclib import say
-
-from dice import Dice
-
-from grammar import SimpleGrammar
+from rpglib.basiclib import say
+from rpglib.dice import Dice
 
 import random
+import rpglib.utils as utils
 
-import utils
 
 class EnemyState:
     Idle = 0
     PrepareToAttack = 1
     Attack = 2
     Dead = 3
+
 
 class Enemy:
     def __init__(self, name):
@@ -40,9 +38,9 @@ class Enemy:
 
     def add_attack(self, attack_descripton_grammar, damage_dice):
         self.attacks.append({
-            "description_grammar" : attack_descripton_grammar,
-            "damage_dice" : damage_dice
-            })
+            "description_grammar": attack_descripton_grammar,
+            "damage_dice": damage_dice
+        })
 
         return self
 

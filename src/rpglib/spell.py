@@ -1,8 +1,6 @@
-from basiclib import say
+from rpglib.basiclib import say
+from rpglib.dice import Dice
 
-from grammar import SimpleGrammar
-
-from dice import Dice
 
 class SpellType:
     Attack = 1
