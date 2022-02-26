@@ -1,4 +1,4 @@
-from rpglib.basiclib import say
+from .basiclib import say
 import sys
 
 

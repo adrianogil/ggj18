@@ -1,14 +1,14 @@
-import rpglib.rpglib as rpglib
-from rpglib.rpglib import Enemy, Spell, SpellType, Creature, Bag, Room, Item, GameDescription
-from rpglib.rpglib import say
+import ggj18.rpglib.rpglib as rpglib
+from ggj18.rpglib.rpglib import Enemy, Spell, SpellType, Creature, Bag, Room, Item, GameDescription
+from ggj18.rpglib.rpglib import say
 
-from rpglib.grammar import SimpleGrammar
-from rpglib.grammar import SimpleGrammar as SG
+from ggj18.rpglib.grammar import SimpleGrammar
+from ggj18.rpglib.grammar import SimpleGrammar as SG
 
-from rpglib.dice import Dice
+from ggj18.rpglib.dice import Dice
 Dp = Dice.parse
 
-import rpglib.utils
+import ggj18.rpglib.utils
 
 
 

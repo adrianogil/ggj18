@@ -1,6 +1,6 @@
-from rpglib.basiclib import say
-from rpglib.dice import Dice
-import rpglib.utils as utils
+from .basiclib import say
+from .dice import Dice
+from . import utils as utils
 
 
 class CreatureState:

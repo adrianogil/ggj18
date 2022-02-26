@@ -5,7 +5,7 @@ import readline  # noqa: adds readline semantics to input()
 import textwrap
 import random
 
-from rpglib.item import Item
+from .item import Item
 
 try:
     from shutil import get_terminal_size

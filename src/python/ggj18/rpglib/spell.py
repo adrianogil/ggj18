@@ -1,5 +1,5 @@
-from rpglib.basiclib import say
-from rpglib.dice import Dice
+from .basiclib import say
+from .dice import Dice
 
 
 class SpellType:

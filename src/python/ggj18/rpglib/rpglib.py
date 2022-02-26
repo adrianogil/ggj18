@@ -1,15 +1,14 @@
-import rpglib.basiclib as basiclib
-from rpglib.basiclib import when, say
+from . import basiclib as basiclib
+from . import room as room
+from . import spell as spell
+from . import enemies as enemies
+from . import creatures as creatures
 
-from rpglib.player import Player
+from .basiclib import when, say
+from .player import Player
 
-import rpglib.room as room
 
-import rpglib.spell as spell
-import rpglib.enemies as enemies
-import rpglib.creatures as creatures
-
-import rpglib.utils
+import utils
 
 import random
 
@@ -64,9 +63,7 @@ def whereami():
 def show_directions_history():
     global rpg_game
     for d in rpg_game.player.directions_history:
-        say(d)
-
-    
+        say(d)    
 
 @when('directions')
 def available_directions():

@@ -1,6 +1,6 @@
-from rpglib.basiclib import InvalidCommand
-from rpglib.basiclib import InvalidDirection
-from rpglib.basiclib import Bag
+from .basiclib import InvalidCommand
+from .basiclib import InvalidDirection
+from .basiclib import Bag
 
 from copy import deepcopy
 
