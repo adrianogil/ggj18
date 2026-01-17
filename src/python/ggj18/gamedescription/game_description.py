@@ -221,6 +221,61 @@ def get_description():
                     .set_damage('2d4+2')
                     .set_MP_cost(2)
                     .set_target_number(-1),
+        "Frost Lance" : Spell("Frost Lance",
+                        SimpleGrammar().set_text("A spear of icy wind streaks toward #target#, riming the air with frost"),
+                         SpellType.Attack)
+                    .set_damage('2d6+2')
+                    .set_MP_cost(3),
+        "Lightning Bolt" : Spell("Lightning Bolt",
+                        SimpleGrammar().set_text("A crackling bolt of lightning arcs toward #target#"),
+                         SpellType.Attack)
+                    .set_damage('3d6')
+                    .set_MP_cost(4),
+        "Shadow Spike" : Spell("Shadow Spike",
+                        SimpleGrammar().set_text("A jagged spike of shadow erupts beneath #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d8')
+                    .set_MP_cost(4),
+        "Thunderclap" : Spell("Thunderclap",
+                        SimpleGrammar().set_text("A concussive boom slams into #target#"),
+                         SpellType.Attack)
+                    .set_damage('3d4+3')
+                    .set_MP_cost(3),
+        "Flame Lash" : Spell("Flame Lash",
+                        SimpleGrammar().set_text("A whip of flame snaps across #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d6+1')
+                    .set_MP_cost(3),
+        "Stone Shards" : Spell("Stone Shards",
+                        SimpleGrammar().set_text("Razor-edged stone shards swirl into #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d6')
+                    .set_MP_cost(3),
+        "Ice Nova" : Spell("Ice Nova",
+                        SimpleGrammar().set_text("A burst of crystalline ice explodes around #target#"),
+                         SpellType.Attack)
+                    .set_damage('3d4+2')
+                    .set_MP_cost(4),
+        "Arcane Pierce" : Spell("Arcane Pierce",
+                        SimpleGrammar().set_text("A needle of pure arcane force pierces #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d8+1')
+                    .set_MP_cost(4),
+        "Venom Burst" : Spell("Venom Burst",
+                        SimpleGrammar().set_text("A vile burst of venom splashes over #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d6+2')
+                    .set_MP_cost(3),
+        "Solar Flare" : Spell("Solar Flare",
+                        SimpleGrammar().set_text("A blinding flare of sunlight scorches #target#"),
+                         SpellType.Attack)
+                    .set_damage('3d6+1')
+                    .set_MP_cost(5),
+        "Grave Chill" : Spell("Grave Chill",
+                        SimpleGrammar().set_text("A necrotic chill clings to #target#"),
+                         SpellType.Attack)
+                    .set_damage('2d6+3')
+                    .set_MP_cost(3),
 
     }
     game_description.defined_spells = defined_spells
@@ -230,6 +285,17 @@ def get_description():
         defined_spells["Fireball"],
         defined_spells["Fire Storm"],
         defined_spells["Acid Arrow"],
+        defined_spells["Frost Lance"],
+        defined_spells["Lightning Bolt"],
+        defined_spells["Shadow Spike"],
+        defined_spells["Thunderclap"],
+        defined_spells["Flame Lash"],
+        defined_spells["Stone Shards"],
+        defined_spells["Ice Nova"],
+        defined_spells["Arcane Pierce"],
+        defined_spells["Venom Burst"],
+        defined_spells["Solar Flare"],
+        defined_spells["Grave Chill"],
     ]
     game_description.player.learned_spells = learned_spells
 
