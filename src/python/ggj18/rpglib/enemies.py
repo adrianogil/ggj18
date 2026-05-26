@@ -151,7 +151,11 @@ class Enemy:
             self.state = EnemyState.Dead
             source.get_victory_from(self, self.loot)
             self.current_room.remove_enemy(self)
-        elif self.state == EnemyState.Idle or ( \
+        else:
+            say(self.name + " HP: " + str(self.current_HP) + "/" + str(self.max_HP))
+        if self.current_HP <= 0:
+            return
+        if self.state == EnemyState.Idle or ( \
              self.attack_target != source   \
             ):
             # Enemy should attack whatever attack him

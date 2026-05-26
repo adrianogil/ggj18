@@ -23,6 +23,18 @@ def get_random_enemy():
 
     return random.choice(rpg_game.defined_enemies)
 
+def describe_enemies(room):
+    if len(room.enemies) == 0:
+        return
+    say("Enemies here:")
+    for i, enemy in enumerate(room.enemies):
+        say("%s: %s (HP %s/%s)" % (
+            i,
+            enemy.name,
+            enemy.current_HP,
+            enemy.max_HP
+        ))
+
 
 class Enemy(enemies.Enemy):
     """Reimplement"""
@@ -102,9 +114,12 @@ def go(direction):
         last_room = rpg_game.current_room
         rpg_game.current_room = room
         say('You go %s.' % direction)
+        enemy_count = len(room.enemies)
         look()
         if room is not last_room:
             room.on_player_enter()
+            if len(room.enemies) != enemy_count:
+                describe_enemies(room)
 
 
 @when('consume ITEM')
@@ -144,6 +159,7 @@ def drop(thing):
 def look():
     global rpg_game
     say(rpg_game.current_room)
+    describe_enemies(rpg_game.current_room)
     if rpg_game.current_room.items:
         for i in rpg_game.current_room.items:
             say('A %s is here.' % i)
@@ -163,7 +179,12 @@ def list_magic():
     global rpg_game
     i = 0
     for m in rpg_game.player.learned_spells:
-        say(str(i) + ': ' + m.name)
+        cooldown = rpg_game.player.get_spell_cooldown(m)
+        if cooldown > 0:
+            say(str(i) + ': ' + m.name + ' (' + m.get_combat_summary() +
+                    ', ready in ' + str(cooldown) + ' turn(s))')
+        else:
+            say(str(i) + ': ' + m.name + ' (' + m.get_combat_summary() + ')')
         i = i + 1
     rpg_game.should_update_turn = False
 
@@ -173,9 +194,14 @@ def cast(magic):
     global rpg_game
     if magic == None:
         say("Which magic you would like to spell?")
+        rpg_game.should_update_turn = False
         return
     i = 0
     wm = magic.strip().split()
+    if len(wm) == 0:
+        say("Which magic you would like to spell?")
+        rpg_game.should_update_turn = False
+        return
     for m in rpg_game.player.learned_spells:
         magic_name_size = len(m.name)
         if (utils.is_int(wm[0]) and int(wm[0]) == i):
@@ -187,6 +213,9 @@ def cast(magic):
             m.cast(rpg_game.player, rpg_game, magic[magic_name_size:])
             break
         i = i + 1
+    else:
+        say("No spell identified.")
+        rpg_game.should_update_turn = False
 
 @when('invoke list')
 def list_invokable_creatures():
@@ -262,6 +291,7 @@ def world_update():
         c.update_action(rpg_game)
     for e in rpg_game.current_room.enemies:
         e.update_action(rpg_game)
+    rpg_game.player.update_spell_cooldowns()
 
 
 def start(description_object):

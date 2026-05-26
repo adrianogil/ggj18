@@ -56,3 +56,23 @@ class Dice:
             current_value = current_value + int(num_str)
 
         return current_value
+
+    @staticmethod
+    def range(str_dice_data):
+        min_value = 0
+        max_value = 0
+        for term in str_dice_data.split('+'):
+            term = term.strip()
+            if term == '':
+                continue
+            if 'd' in term:
+                num_dice, dice_size = term.split('d', 1)
+                num_dice = int(num_dice)
+                dice_size = int(dice_size)
+                min_value = min_value + num_dice
+                max_value = max_value + num_dice * dice_size
+            else:
+                value = int(term)
+                min_value = min_value + value
+                max_value = max_value + value
+        return min_value, max_value

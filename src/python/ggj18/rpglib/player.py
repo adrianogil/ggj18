@@ -18,6 +18,7 @@ class Player:
         self.current_MP = self.max_MP
 
         self.creatures = []
+        self.spell_cooldowns = {}
 
         self.directions_history = []
 
@@ -60,6 +61,31 @@ class Player:
             self.current_MP = self.current_MP - MP_usage
             return True
         return False
+
+    def get_spell_cooldown(self, spell):
+        cooldown = self.spell_cooldowns.get(spell.name)
+        if cooldown is None:
+            return 0
+        return cooldown['turns']
+
+    def start_spell_cooldown(self, spell):
+        if spell.cooldown > 0:
+            self.spell_cooldowns[spell.name] = {
+                'turns': spell.cooldown,
+                'fresh': True
+            }
+
+    def update_spell_cooldowns(self):
+        finished_spells = []
+        for spell_name, cooldown in self.spell_cooldowns.items():
+            if cooldown['fresh']:
+                cooldown['fresh'] = False
+            else:
+                cooldown['turns'] = cooldown['turns'] - 1
+            if cooldown['turns'] <= 0:
+                finished_spells.append(spell_name)
+        for spell_name in finished_spells:
+            del self.spell_cooldowns[spell_name]
 
     def get_victory_from(self, enemy, loot=None):
         self.add_XP(enemy.granted_xp)
