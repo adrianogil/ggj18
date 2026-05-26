@@ -8,7 +8,7 @@ from ggj18.rpglib.grammar import SimpleGrammar as SG
 from ggj18.rpglib.dice import Dice
 Dp = Dice.parse
 
-import ggj18.rpglib.utils
+import ggj18.rpglib.utils as utils
 
 
 
@@ -119,15 +119,14 @@ def get_description():
 
 
     def healing_action(room):
-        cure_value = Dice.parse('2d5+3')
-        cHp = rpg_game_description.player.current_HP
-        cured_points = Dp(cure_value)
+        cHp = game_description.player.current_HP
+        cured_points = Dp('2d5+3')
         cHp = cHp + cured_points
-        say(utils.capitalize(item.name) + ' cured ' + str(cured_points) + ' HP points!')
-        if cHp > rpg_game_description.player.max_HP:
-            rpg_game_description.player.current_HP = rpg_game_description.player.max_HP
+        say('The healing energy cured ' + str(cured_points) + ' HP points!')
+        if cHp > game_description.player.max_HP:
+            game_description.player.current_HP = game_description.player.max_HP
         else:
-            rpg_game_description.player.current_HP = cHp
+            game_description.player.current_HP = cHp
     healing_room.set_player_enter_callback(healing_action)
 
     game_description.defined_enemies = [

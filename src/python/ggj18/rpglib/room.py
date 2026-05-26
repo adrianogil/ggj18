@@ -98,10 +98,12 @@ class Room:
             self.enter_callback(self)
 
     def on_player_stay(self):
-        self.stay_callback(self)
+        if self.stay_callback is not None:
+            self.stay_callback(self)
 
     def on_player_exit(self):
-        self.exit_callback(self)
+        if self.exit_callback is not None:
+            self.exit_callback(self)
 
     def add_enemy(self, enemy):
         if self.enemies == None:

@@ -6,9 +6,7 @@ from . import creatures as creatures
 
 from .basiclib import when, say
 from .player import Player
-
-
-import utils
+from . import utils as utils
 
 import random
 

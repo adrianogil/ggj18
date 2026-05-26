@@ -27,6 +27,7 @@ class Enemy:
         self.state = EnemyState.Idle
 
         self.current_room = None
+        self.directions = ["north", "south", "east", "west"]
 
         self.attacks = []
 
@@ -82,14 +83,14 @@ class Enemy:
     def get_attack_damage(self):
         return int(0.5 * Dice.parse('1d4') * self.get_STR_MOD())
 
-    def go(self, direction):
+    def go(self, direction, game_description=None):
         room = self.current_room.exit(direction)
         if room:
             last_room = self.current_room
             self.current_room = room
-            if last_room == game_description.current_room:
+            if game_description and last_room == game_description.current_room:
                 say(self.name + ' went %s.' % direction)
-            elif self.current_room == game_description.current_room:
+            elif game_description and self.current_room == game_description.current_room:
                 say(self.name + ' arrived from %s.' % utils.opposite_direction(direction))
             last_room.remove_enemy(self)
             self.current_room.add_enemy(self)
@@ -118,11 +119,11 @@ class Enemy:
                 prob_go_out = random.uniform(0, 1)
                 if prob_go_out < 0.1:
                     dir = Dice.parse( '1d4')
-                    if not self.go(self.directions[dir-1]):
+                    if not self.go(self.directions[dir-1], game_description):
                         say(utils.capitalize(self.name) + ' is wandering loosely')
         elif self.state == EnemyState.Attack:
             if self.attack_target.is_dead():
-                self.state == EnemyState.Idle
+                self.state = EnemyState.Idle
             else:
                 self.attack(game_description)
 
@@ -138,7 +139,7 @@ class Enemy:
                 damage = Dice.parse(attack['damage_dice'])
                 self.attack_target.receive_damage(damage, self)
                 if self.attack_target.is_dead():
-                    self.state == EnemyState.Idle
+                    self.state = EnemyState.Idle
             else:
                 say(self.attack_target_name + " dodges attack")
 
