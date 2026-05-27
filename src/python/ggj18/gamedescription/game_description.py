@@ -473,23 +473,11 @@ def get_description():
 
     }
     game_description.defined_spells = defined_spells
+    game_description.player.defined_spells = defined_spells
 
     learned_spells = [
         defined_spells["Magic missiles"],
         defined_spells["Fireball"],
-        defined_spells["Fire Storm"],
-        defined_spells["Acid Arrow"],
-        defined_spells["Frost Lance"],
-        defined_spells["Lightning Bolt"],
-        defined_spells["Shadow Spike"],
-        defined_spells["Thunderclap"],
-        defined_spells["Flame Lash"],
-        defined_spells["Stone Shards"],
-        defined_spells["Ice Nova"],
-        defined_spells["Arcane Pierce"],
-        defined_spells["Venom Burst"],
-        defined_spells["Solar Flare"],
-        defined_spells["Grave Chill"],
     ]
     game_description.player.learned_spells = learned_spells
 

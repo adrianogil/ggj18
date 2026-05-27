@@ -393,6 +393,33 @@ def status():
     rpg_game.player.status()
     rpg_game.should_update_turn = False
 
+@when('level reward', reward=None)
+@when('level reward REWARD')
+def level_reward(reward):
+    global rpg_game
+    rpg_game.player.claim_level_reward(reward)
+    rpg_game.should_update_turn = False
+
+@when('spell unlocks')
+@when('spell unlock list')
+def spell_unlocks():
+    global rpg_game
+    rpg_game.player.say_spell_unlock_options()
+    rpg_game.should_update_turn = False
+
+@when('stats')
+@when('stat points')
+def show_stats():
+    global rpg_game
+    rpg_game.player.say_stats()
+    rpg_game.should_update_turn = False
+
+@when('spend stat STAT')
+def spend_stat(stat):
+    global rpg_game
+    rpg_game.player.spend_stat_point(stat)
+    rpg_game.should_update_turn = False
+
 
 def world_update():
     global rpg_game

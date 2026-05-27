@@ -172,6 +172,8 @@ class Spell:
                 self.description.add_tag("target", [self._target_label(e)])
                 say(self.description)
                 damage = Dice.parse(self.damage_dice)
+                if hasattr(caster, 'get_spell_damage_bonus'):
+                    damage = damage + caster.get_spell_damage_bonus()
                 e.receive_damage(damage, caster)
 
         caster.start_spell_cooldown(self)
