@@ -31,6 +31,13 @@ class Room:
         self.description = str(description).strip()
         self.enemies = []
         self.known_directions = []
+        self.discovered = False
+        self.biome = "unknown"
+        self.danger = 0
+        self.loot_chance = 0
+        self.loot_checked = False
+        self.room_event = None
+        self.room_event_done = False
 
         self.enter_callback = None
         self.exit_callback = None
@@ -79,6 +86,19 @@ class Room:
     def set_name(self, name):
         self.name = name
 
+        return self
+
+    def set_tags(self, biome=None, danger=None, loot_chance=None):
+        if biome is not None:
+            self.biome = biome
+        if danger is not None:
+            self.danger = danger
+        if loot_chance is not None:
+            self.loot_chance = loot_chance
+        return self
+
+    def set_room_event(self, room_event):
+        self.room_event = room_event
         return self
 
     def set_player_enter_callback(self, callback):

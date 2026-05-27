@@ -9,6 +9,7 @@ from .player import Player
 from . import utils as utils
 
 import random
+from copy import deepcopy
 
 import os
 
@@ -21,7 +22,7 @@ class GameDescription:
 def get_random_enemy():
     global rpg_game
 
-    return random.choice(rpg_game.defined_enemies)
+    return deepcopy(random.choice(rpg_game.defined_enemies))
 
 def describe_enemies(room):
     if len(room.enemies) == 0:
@@ -34,6 +35,34 @@ def describe_enemies(room):
             enemy.current_HP,
             enemy.max_HP
         ))
+
+
+def room_label(room):
+    name = getattr(room, 'name', '?')
+    digits = ''.join(c for c in name if c.isdigit())
+    if digits:
+        return digits[-2:]
+    return name[:2]
+
+
+def describe_room_tags(room):
+    return "%s, danger %s, loot %s%%" % (
+        getattr(room, 'biome', 'unknown'),
+        getattr(room, 'danger', 0),
+        getattr(room, 'loot_chance', 0)
+    )
+
+
+def discover_room(room):
+    global rpg_game
+    if room.discovered:
+        return
+    room.discovered = True
+    rpg_game.player.room_discovery_log.append(room)
+    say("Room discovered: %s (%s)" % (
+        getattr(room, 'name', 'Unknown room'),
+        describe_room_tags(room)
+    ))
 
 
 class Enemy(enemies.Enemy):
@@ -96,6 +125,86 @@ def available_directions():
         say(str_directions)
 
 
+@when('room log')
+def show_room_log():
+    global rpg_game
+    if len(rpg_game.player.room_discovery_log) == 0:
+        say("You have not discovered any rooms yet.")
+    else:
+        say("Discovered rooms:")
+        for i, room in enumerate(rpg_game.player.room_discovery_log):
+            say("%s. %s (%s)" % (
+                i + 1,
+                getattr(room, 'name', 'Unknown room'),
+                describe_room_tags(room)
+            ))
+    rpg_game.should_update_turn = False
+
+
+@when('map')
+@when('mini map')
+def show_map():
+    global rpg_game
+    starting_room = rpg_game.starting_room or rpg_game.current_room
+    discover_room(rpg_game.current_room)
+
+    direction_offsets = {
+        'north': (0, -1),
+        'south': (0, 1),
+        'east': (1, 0),
+        'west': (-1, 0)
+    }
+    coords = {starting_room: (0, 0)}
+    queue = [starting_room]
+
+    while queue:
+        room = queue.pop(0)
+        x, y = coords[room]
+        for direction, offset in direction_offsets.items():
+            next_room = room.exit(direction)
+            if next_room is None or not next_room.discovered:
+                continue
+            if next_room not in coords:
+                coords[next_room] = (x + offset[0], y + offset[1])
+                queue.append(next_room)
+
+    if rpg_game.current_room not in coords:
+        coords[rpg_game.current_room] = (0, 0)
+
+    min_x = min(x for x, _ in coords.values())
+    max_x = max(x for x, _ in coords.values())
+    min_y = min(y for _, y in coords.values())
+    max_y = max(y for _, y in coords.values())
+
+    say("Mini-map:")
+    for y in range(min_y, max_y + 1):
+        row = []
+        for x in range(min_x, max_x + 1):
+            room = None
+            for mapped_room, room_coords in coords.items():
+                if room_coords == (x, y):
+                    room = mapped_room
+                    break
+            if room is None:
+                row.append(" . ")
+            elif room is rpg_game.current_room:
+                row.append("@%s" % room_label(room))
+            else:
+                row.append(" %s" % room_label(room))
+        say(" ".join(row))
+
+    current_room = rpg_game.current_room
+    say("Current: %s (%s)" % (
+        getattr(current_room, 'name', 'Unknown room'),
+        describe_room_tags(current_room)
+    ))
+    if current_room.known_directions:
+        say("Known directions here: " + ", ".join(current_room.known_directions))
+    else:
+        say("Known directions here: none")
+    rpg_game.should_update_turn = False
+
+
 @when('north', direction='north')
 @when('south', direction='south')
 @when('east', direction='east')
@@ -108,12 +217,12 @@ def go(direction):
     else:
         rpg_game.player.add_direction(direction)
         rpg_game.current_room.add_known_direction(direction)
-        # if direction == 'north':
-        #     room.add_known_direction('south')
+        room.add_known_direction(room._directions[direction])
 
         last_room = rpg_game.current_room
         rpg_game.current_room = room
         say('You go %s.' % direction)
+        discover_room(room)
         enemy_count = len(room.enemies)
         look()
         if room is not last_room:
@@ -297,6 +406,7 @@ def world_update():
 def start(description_object):
     global rpg_game
     rpg_game = description_object.get_description()
+    discover_room(rpg_game.current_room)
     read_config_file()
     # rpg_game.daiy_log
     look()

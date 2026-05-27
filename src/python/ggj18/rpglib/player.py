@@ -21,6 +21,7 @@ class Player:
         self.spell_cooldowns = {}
 
         self.directions_history = []
+        self.room_discovery_log = []
 
     def get_exp_for_next_level(self):
         return self.level * 100
